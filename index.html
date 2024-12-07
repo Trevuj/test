@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey World of Farhan</title>
+    <style>
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #4CAF50;
+            --h1-color: #04007561;
+            --h2-color: #070A0E;
+            --background-color: #73737c;
+            --text-color: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        section {
+            padding: 80px 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1, h2 {
+            color: var(--h1-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5A52D5;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        #result-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--background-color);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: rgba(0, 0, 0, 0.9);
+                padding: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Loading Logo */
+        .loading-logo {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1002;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-logo img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .loading-logo p {
+            color: white;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Developer Icon */
+        .developer-icon {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: var(--primary-color);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .developer-icon:hover {
+            color: var(--secondary-color);
+        }
+
+        /* WinCleaner Section */
+        .tool-card {
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .tool-card h3 {
+            color: var(--h2-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Browser Tools Section */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .tool-grid .tool-card {
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .tool-grid .tool-card h3 {
+            color: var(--h2-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        #bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Container -->
+    <div class="video-container">
+        <video id="bg-video" muted>
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">Survey World of Farhan</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#wincleaner">WinCleaner</a>
+                <a href="#browser">Browser</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <div class="container">
+                <h1>As-Salamu Alaikum</h1>
+                <p>Discover insights through our innovative surveys</p>
+                <form id="survey-form">
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" name="age" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select a country</option>
+                            <option value="us">USA</option>
+                            <option value="ca">Canada</option>
+                            <option value="gb">UK</option>
+                        </select>
+                    </div>
+                    <button type="submit">Generate Random Person</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="wincleaner">
+            <div class="container">
+                <h1>WinCleaner</h1>
+                <p>Optimize your Windows system with our powerful cleaning tool</p>
+                <div class="tool-card">
+                    <h3>Optimize your Windows system with our powerful cleaning tool</h3>
+                    <p>Download and extract the zip file. After extracting, open the .exe file by "Run as Administrator".</p>
+                    <a href="https://drive.usercontent.google.com/download?id=1hwc0WcJbgWXrGJ8UoDRGzvpMhXNLkShE&export=download&authuser=0" target="_blank">
+                        <button>Download WinCleaner</button>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="Dollar Exchange">
+            <div class="container">
+                <h1>Dollar Exchange</h1>
+                <div class="tool-card">
+                    <h3> Best Dollar exchange Rate here... </h3>
+
+                    <a href="https://forms.gle/3m8veagMgjZnKUCS8" target="_blank"><button>Exchange</button></a>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="browser">
+            <div class="container">
+                <h1>Browser Tools</h1>
+                <p>Enhance your browsing experience with these powerful tools</p>
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <h3>GoLogin</h3>
+                        <a href="https://gologin.com/" target="_blank"><button>Visit GoLogin</button></a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>AdsPower</h3>
+                        <a href="https://www.adspower.com/" target="_blank"><button>Visit AdsPower</button></a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>Incognition</h3>
+                        <a href="https://incogniton.com/" target="_blank"><button>Visit Incognition</button></a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>Dolphin{anty}</h3>
+                        <a href="https://dolphin-anty.com/" target="_blank"><button>Visit Dolphin{anty}</button></a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>MoreLogin</h3>
+                        <a href="https://www.morelogin.com/" target="_blank"><button>Visit MoreLogin</button></a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>ClonBrowser</h3>
+                        <a href="https://www.clonbrowser.com/" target="_blank"><button>Visit ClonBrowser</button></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <p>Connect with us on social media</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/groups/877637010112660" target="_blank" title="Facebook Group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/FarhanRana.M" target="_blank" title="Facebook Profile">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/></svg>
+                    </a>
+                    <a href="404.html" target="_blank" title="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z"/></svg>
+                    </a>
+                    <a href="404.html" target="_blank" title="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.948 0-3.259.014-3.667.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="result-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Generated Person</h2>
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <div class="loading-logo">
+        <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExazhqMTYzaXd2N3g4YTk4NjV5YmR1MzYzdHNpamlzMm5reTdjMW1yZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9DPldJHzZKtOnEn6/giphy.gif" alt="Loading...">
+        <p>Hi Human! Ghost is coming with the best result for you</p>
+    </div>
+
+    <a href="https://www.facebook.com/professorrehan" target="_blank" class="developer-icon">👨‍💻</a>
+
+    <script src="data.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Form submission and modal display
+        const form = document.getElementById('survey-form');
+        const modal = document.getElementById('result-modal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+        const result = document.getElementById('result');
+        const loadingLogo = document.querySelector('.loading-logo');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const age = formData.get('age');
+            const country = formData.get('country');
+
+            // Show loading logo
+            loadingLogo.style.display = 'flex';
+
+            generateRandomPerson(age, country).then(personData => {
+                result.innerHTML = `
+                    <p><strong>Name:</strong> ${personData.name}</p>
+                    <p><strong>Age:</strong> ${personData.age}</p>
+                    <p><strong>Country:</strong> ${personData.country}</p>
+                    <p><strong>Address:</strong> ${personData.address}</p>
+                    <p><strong>City:</strong> ${personData.city}</p>
+                    <p><strong>State:</strong> ${personData.state}</p>
+                    <p><strong>ZIP Code:</strong> ${personData.zip}</p>
+                `;
+
+                modal.style.display = 'block';
+            }).catch(error => {
+                console.error('Error generating random person:', error);
+                alert('Failed to generate random person. Please try again.');
+            }).finally(() => {
+                // Hide loading logo
+                loadingLogo.style.display = 'none';
+            });
+        });
+
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+        };
+
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        // Scroll-controlled video playback
+        document.addEventListener("DOMContentLoaded", () => {
+            const video = document.querySelector("#bg-video");
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            let requestId = null;
+
+            const smoothUpdate = () => {
+                const scrollPosition = window.scrollY;
+                const scrollFraction = scrollPosition / maxScroll;
+                const videoTime = scrollFraction * video.duration;
+
+                video.currentTime = videoTime;
+                requestId = null; // Reset requestId to allow new requests
+            };
+
+            const handleScroll = () => {
+                // Use requestAnimationFrame for smoother updates
+                if (!requestId) {
+                    requestId = requestAnimationFrame(smoothUpdate);
+                }
+            };
+
+            video.addEventListener("loadedmetadata", () => {
+                window.addEventListener("scroll", handleScroll);
+            });
+        });
+    </script>
+</body>
+</html>
